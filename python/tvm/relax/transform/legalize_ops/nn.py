@@ -228,7 +228,7 @@ def _nn_pad(bb: BlockBuilder, call: Call) -> Expr:
     pad_after = pad_widths[1::2]
     return bb.call_te(
         topi.nn.pad,
-        call.args[0],
+        call.attrs.pad_value,
         pad_before=pad_before,
         pad_after=pad_after,
         pad_value=float(call.args[1].data.numpy()),

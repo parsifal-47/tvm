@@ -130,8 +130,9 @@ Expr pad(Expr data, Array<Integer> pad_width, Expr pad_value, String pad_mode) {
   auto attrs = make_object<PadAttrs>();
   attrs->pad_width = std::move(pad_width);
   attrs->pad_mode = std::move(pad_mode);
+  attrs->pad_value = std::move(pad_value);
   static const Op& op = Op::Get("relax.nn.pad");
-  return Call(op, {data, pad_value}, Attrs(attrs), {});
+  return Call(op, {data}, Attrs(attrs), {});
 }
 
 TVM_REGISTER_GLOBAL("relax.op.nn.pad").set_body_typed(pad);
@@ -161,9 +162,9 @@ StructInfo InferStructInfoPad(const Call& call, const BlockBuilder& ctx) {
 }
 
 TVM_REGISTER_OP("relax.nn.pad")
-    .set_num_inputs(2)
+    .set_num_inputs(1)
     .add_argument("data", "Tensor", "The input tensor.")
-    .add_argument("pad_value", "Tensor", "The value to fill in padded area with.")
+//    .add_argument("pad_width", "Tensor", "Number of values padded to the edges.")
     .set_attrs_type<PadAttrs>()
     .set_attr<FInferStructInfo>("FInferStructInfo", InferStructInfoPad)
     .set_attr<Bool>("FPurity", Bool(true));
